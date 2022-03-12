@@ -168,7 +168,11 @@ int main()
     //simpleDDA(tela, w.ws_row, w.ws_col, p1, p2);
     Bresenham_Algorithm(tela, w.ws_row, w.ws_col, p1, p2);
 
-   show_tela(tela, w.ws_row, w.ws_col);
+    show_tela(tela, w.ws_row, w.ws_col);
+    
+    for (i=0; i<w.ws_row; ++i)
+        delete[] tela[i];
+    delete[] tela;
 
     return 0;
 }
