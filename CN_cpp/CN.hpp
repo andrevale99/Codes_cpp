@@ -7,6 +7,9 @@
 #include <iomanip>
 #include <ostream>
 #include <tuple>
+#include <cstdint>
+
+using std::uint8_t;
 
 class CN
 {
@@ -21,23 +24,33 @@ class CN
                 out << c.mtx[i][j] << std::setw(10);
             out << ")\n";
         }
+        out << '\n';
+
         return out;
     }
 
     public:
         CN();
-        CN(unsigned row, unsigned col);
+        explicit CN(unsigned row, unsigned col);
+        CN(const CN &c);
 
         ~CN();
 
         void fill(double valor);
+        void eye();
 
         std::tuple<unsigned, unsigned> size();
         unsigned size_rows();
         unsigned size_cols();
 
-        void allocate(unsigned row, unsigned col);
+        bool equal(const CN &c);
+
+        void allocate(unsigned new_row, unsigned new_col);
         void deallocate(unsigned row, unsigned col);
+
+        void operator=(const CN &c);
+        bool operator==(const CN &c);
+        CN operator+(const CN &c);
 
     private:
         double **mtx;

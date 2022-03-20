@@ -1,22 +1,49 @@
 #include "CN.hpp"
+#include <tuple>
+
+//===============================================
+//      CLASS
+//===============================================
 
 /**
  *  @brief Constutor padrao
  * */
-CN::CN() {}
+CN::CN()
+{
+    row = 0;
+    col = 0;
+
+    mtx = nullptr;
+}
 
 /**
- *  @brief COnstrutor sobrecarregado
+ *  @brief Construtor sobrecarregado para
+ *         criacao de uma matriz nula
  *
  *  @param row -> linhas da matriz
  *  @param col -> colunas da matriz
  * */
 CN::CN(unsigned row, unsigned col) 
-    : row(row),
-      col(col)
 {
+    this->row = row;
+    this->col = col;
 
     allocate(this->row, this->col);
+}
+
+/**
+ *  @brief Construtor sobrecarregado de copia
+ * */
+CN::CN(const CN &c)
+{
+    allocate(c.row, c.col);
+        
+    this->row = c.row;
+    this->col = c.col;
+
+    for(i=0; i<row; ++i)
+        for(j=0; j<col; ++j)
+            this->mtx[i][j] = c.mtx[i][j];
 }
 
 /**
@@ -36,6 +63,25 @@ void CN::fill(double valor)
     for(i=0; i<row; ++i)
         for(j=0; j<col; ++j)
             mtx[i][j] = valor;
+}
+
+/**
+ *  @brief Transforma a matriz em uma 
+ *         matriz identidade
+ * */
+void CN::eye()
+{
+    if (row == col)
+    {
+        for(i=0; i<row; ++i)
+            for(j=0; j<col; ++j)
+            {
+                if (i == j)
+                    mtx[i][j] = 1;
+                else
+                    mtx[i][j] = 0;
+            }
+    }
 }
 
 /**
@@ -66,13 +112,46 @@ unsigned CN::size_cols()
 }
 
 /**
+ *  @brief Verifica se as duas matrizes sao iguais
+ *         comparando c1 (a que voce quer verificar) 
+ *         com c2
+ *
+ *  @return true -> Caso sejam iguais
+ *          false -> Caso contario
+ * */
+bool CN::equal(const CN &c)
+{
+    if (row == c.row)
+    {
+        if (col == c.col)
+        {
+            for(i=0; i<c.row; ++i)
+                for(j=0; j<c.col; ++j)
+                {
+                    if(mtx[i][j] != c.mtx[i][j])
+                        return false;
+                }
+        }
+        else
+          return false;
+    }
+    else
+        return false;
+
+    return true;
+}
+
+/**
  *  @brief Aloca/Realoca o novo tamanho da matriz
  *
  *  @param row -> quantidade de linhas
  *  @param col -> quantidade de colunas
  * */
-void CN::allocate(unsigned row, unsigned col)
+void CN::allocate(unsigned new_row, unsigned new_col)
 {
+    row = new_row;
+    col = new_col;
+
     mtx = new double*[row];
     for(i=0; i<row; ++i)
         mtx[i] = new double[col];
@@ -87,5 +166,56 @@ void CN::deallocate(unsigned row, unsigned col)
        delete[] mtx[i];
 
     delete[] mtx;
+}
+
+/**
+ *  @brief Sobrecarga do operator de igualdade (=)
+ *
+ *  @return a nova matriz
+ * */
+void CN::operator=(const CN &c)
+{
+    if (!this->equal(c))
+    {
+            row = c.row;
+            col = c.col;
+
+            for(i=0; i<row; ++i)
+                for(j=0; j<col; ++j)
+                    this->mtx[i][j] = c.mtx[i][j];
+    }
+
+}
+
+bool CN::operator==(const CN &c)
+{
+    if (this->equal(c))
+        return true;
+
+    else
+        return false;
+}
+
+/**
+ *  @brief Sobrecarga do operator de soma (+)
+     * */
+CN CN::operator+(const CN &c)
+{
+    CN prov;
+
+    if (this->row == c.row)
+    {
+        if (this->col == c.col)
+        {   
+            prov.allocate(this->row, this->col);
+
+            for(i=0; i<row; ++i)
+                for(j=0; j<col; ++j)
+                    prov.mtx[i][j] = this->mtx[i][j]  + c.mtx[i][j];  
+
+        }
+    }
+
+    return prov;
 }
 
