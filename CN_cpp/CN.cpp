@@ -169,9 +169,7 @@ void CN::deallocate(unsigned row, unsigned col)
 }
 
 /**
- *  @brief Sobrecarga do operator de igualdade (=)
- *
- *  @return a nova matriz
+ *  @brief Sobrecarga do operator de atribuicao (=)
  * */
 void CN::operator=(const CN &c)
 {
@@ -187,6 +185,12 @@ void CN::operator=(const CN &c)
 
 }
 
+/**
+ *  @brief Sobrecarga do operator de igualdade (==)
+ *
+ *  @return true -> Caso sejam iguais
+ *          false -> Caso contrario
+ * */
 bool CN::operator==(const CN &c)
 {
     if (this->equal(c))
@@ -198,7 +202,9 @@ bool CN::operator==(const CN &c)
 
 /**
  *  @brief Sobrecarga do operator de soma (+)
-     * */
+ *
+ *  @return o resultado
+ * */
 CN CN::operator+(const CN &c)
 {
     CN prov;
@@ -212,6 +218,32 @@ CN CN::operator+(const CN &c)
             for(i=0; i<row; ++i)
                 for(j=0; j<col; ++j)
                     prov.mtx[i][j] = this->mtx[i][j]  + c.mtx[i][j];  
+
+        }
+    }
+
+    return prov;
+}
+
+
+/**
+ *  @brief Sobrecarga do operator de soma (-)
+ *
+ *  @return resultado
+ * */
+CN CN::operator-(const CN &c)
+{
+    CN prov;
+
+    if (this->row == c.row)
+    {
+        if (this->col == c.col)
+        {   
+            prov.allocate(this->row, this->col);
+
+            for(i=0; i<row; ++i)
+                for(j=0; j<col; ++j)
+                    prov.mtx[i][j] = this->mtx[i][j]  - c.mtx[i][j];  
 
         }
     }

@@ -51,6 +51,7 @@ class CN
         void operator=(const CN &c);
         bool operator==(const CN &c);
         CN operator+(const CN &c);
+        CN operator-(const CN &c);
 
     private:
         double **mtx;
