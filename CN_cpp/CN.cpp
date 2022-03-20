@@ -85,6 +85,42 @@ void CN::eye()
 }
 
 /**
+ *  @brief Overload da criacao de uma matriz
+ *         identidade com nova quantidade
+ *         de linhas e colunas
+ * */
+void CN::eye(unsigned new_row, unsigned new_col)
+{
+    if (row == col)
+    {
+        row = new_row;
+        col = new_col; 
+    
+        allocate(row, col);
+
+        for(i=0; i<row; ++i)
+            for(j=0; j<col; ++j)
+            {
+                if (i == j)
+                    mtx[i][j] = 1;
+                else
+                    mtx[i][j] = 0;
+            }
+    }
+}
+
+/**
+ *  @brief realiza a transposicao da matriz
+ * */
+void CN::transpose()
+{
+
+    for(i=0; i<row; ++i)
+        for(j=0; j<col; ++j)
+            mtx[i][j] = mtx[j][i];
+}
+
+/**
  *  @brief Retorna o tamanho da matriz
  *         Lembrando que para receber o tamanho
  *         deve utilizar "std::tie(var1, var2) = obj.size()"
@@ -251,3 +287,31 @@ CN CN::operator-(const CN &c)
     return prov;
 }
 
+
+/**
+ *  @brief Sobrecarga do operator de multiplicacao (*)
+ *
+ *  @return resultado
+ * */
+CN CN::operator*(const CN &c)
+{
+    CN prov;
+
+    if (col == c.row)
+    {
+        prov.allocate(row, c.col);
+        for (i=0; i<row; ++i)
+        {
+            for(j=0; j<col; ++j)
+            {
+                for(k=0; k<col; ++k)
+                {
+                    prov.mtx[i][j] = this->mtx[i][k] * c.mtx[k][j];    
+                }
+            }
+        }
+    }
+
+    return prov;
+
+}

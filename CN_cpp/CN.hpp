@@ -38,6 +38,8 @@ class CN
 
         void fill(double valor);
         void eye();
+        void eye(unsigned new_row, unsigned new_col);
+        void transpose();
 
         std::tuple<unsigned, unsigned> size();
         unsigned size_rows();
@@ -52,6 +54,7 @@ class CN
         bool operator==(const CN &c);
         CN operator+(const CN &c);
         CN operator-(const CN &c);
+        CN operator*(const CN &c);
 
     private:
         double **mtx;
@@ -61,6 +64,7 @@ class CN
         
         unsigned i;
         unsigned j;
+        unsigned k;
 
 
 };
