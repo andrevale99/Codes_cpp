@@ -1,5 +1,5 @@
 GCC = g++
-FLAGS = 
+FLAGS = -Wall
 
 MAIN = main.cpp
 INCL = CN.hpp CN.cpp
