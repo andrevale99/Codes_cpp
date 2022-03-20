@@ -24,5 +24,8 @@ int main()
     cout << "X:\n" << x;
     cout << "Y:\n" << y;
 
+    cout << x*y;
+    
+
     return 0;
 }
