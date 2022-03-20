@@ -1,4 +1,5 @@
 #include "CN.hpp"
+#include <fstream>
 #include <tuple>
 
 //===============================================
@@ -41,8 +42,8 @@ CN::CN(const CN &c)
     this->row = c.row;
     this->col = c.col;
 
-    for(i=0; i<row; ++i)
-        for(j=0; j<col; ++j)
+    for (i=0; i<row; ++i)
+        for (j=0; j<col; ++j)
             this->mtx[i][j] = c.mtx[i][j];
 }
 
@@ -60,8 +61,8 @@ CN::~CN()
  * */
 void CN::fill(double valor)
 {
-    for(i=0; i<row; ++i)
-        for(j=0; j<col; ++j)
+    for (i=0; i<row; ++i)
+        for (j=0; j<col; ++j)
             mtx[i][j] = valor;
 }
 
@@ -73,8 +74,8 @@ void CN::eye()
 {
     if (row == col)
     {
-        for(i=0; i<row; ++i)
-            for(j=0; j<col; ++j)
+        for (i=0; i<row; ++i)
+            for (j=0; j<col; ++j)
             {
                 if (i == j)
                     mtx[i][j] = 1;
@@ -98,8 +99,8 @@ void CN::eye(unsigned new_row, unsigned new_col)
     
         allocate(row, col);
 
-        for(i=0; i<row; ++i)
-            for(j=0; j<col; ++j)
+        for (i=0; i<row; ++i)
+            for (j=0; j<col; ++j)
             {
                 if (i == j)
                     mtx[i][j] = 1;
@@ -115,8 +116,8 @@ void CN::eye(unsigned new_row, unsigned new_col)
 void CN::transpose()
 {
 
-    for(i=0; i<row; ++i)
-        for(j=0; j<col; ++j)
+    for (i=0; i<row; ++i)
+        for (j=0; j<col; ++j)
             mtx[i][j] = mtx[j][i];
 }
 
@@ -161,10 +162,10 @@ bool CN::equal(const CN &c)
     {
         if (col == c.col)
         {
-            for(i=0; i<c.row; ++i)
-                for(j=0; j<c.col; ++j)
+            for (i=0; i<c.row; ++i)
+                for (j=0; j<c.col; ++j)
                 {
-                    if(mtx[i][j] != c.mtx[i][j])
+                    if (mtx[i][j] != c.mtx[i][j])
                         return false;
                 }
         }
@@ -189,7 +190,7 @@ void CN::allocate(unsigned new_row, unsigned new_col)
     col = new_col;
 
     mtx = new double*[row];
-    for(i=0; i<row; ++i)
+    for (i=0; i<row; ++i)
         mtx[i] = new double[col];
 }
 
@@ -198,7 +199,7 @@ void CN::allocate(unsigned new_row, unsigned new_col)
  * */
 void CN::deallocate(unsigned row, unsigned col)
 {
-    for(i=0; i<row; ++i)
+    for (i=0; i<row; ++i)
        delete[] mtx[i];
 
     delete[] mtx;
@@ -251,8 +252,8 @@ CN CN::operator+(const CN &c)
         {   
             prov.allocate(this->row, this->col);
 
-            for(i=0; i<row; ++i)
-                for(j=0; j<col; ++j)
+            for (i=0; i<row; ++i)
+                for (j=0; j<col; ++j)
                     prov.mtx[i][j] = this->mtx[i][j]  + c.mtx[i][j];  
 
         }
@@ -277,8 +278,8 @@ CN CN::operator-(const CN &c)
         {   
             prov.allocate(this->row, this->col);
 
-            for(i=0; i<row; ++i)
-                for(j=0; j<col; ++j)
+            for (i=0; i<row; ++i)
+                for (j=0; j<col; ++j)
                     prov.mtx[i][j] = this->mtx[i][j]  - c.mtx[i][j];  
 
         }
@@ -302,9 +303,9 @@ CN CN::operator*(const CN &c)
         prov.allocate(row, c.col);
         for (i=0; i<row; ++i)
         {
-            for(j=0; j<col; ++j)
+            for (j=0; j<col; ++j)
             {
-                for(k=0; k<col; ++k)
+                for (k=0; k<col; ++k)
                 {
                     prov.mtx[i][j] = this->mtx[i][k] * c.mtx[k][j];    
                 }
@@ -313,5 +314,77 @@ CN CN::operator*(const CN &c)
     }
 
     return prov;
+}
 
+
+/**
+ * @brief Salva a matriz em um arquivo
+ *
+ * @return true -> Caso o arquivo foi escrito corretamente
+ *         false -> Caso contrario, nao salva
+ * */
+bool CN::save(string name)
+{
+    std::ofstream arq(name, std::ios::out);
+
+    if (arq.good())
+    {
+        arq << row << ' ' << col << "\n\n";
+        
+        if (arq.fail())
+        {
+            arq.close();
+            return false;
+        }
+
+        for (i=0; i<row; ++i)
+        {
+            for (j=0; j<col; ++j)
+            {
+                arq << mtx[i][j] << ' ';
+                
+                if (arq.fail())
+                {
+                    arq.close();
+                    return false;
+                }
+            }//FIM do col for
+            
+            arq << '\n';
+        
+        }//FIM do row for
+    }//FIM arq.good()
+
+    else
+        return false;
+
+    arq.close();
+
+    return true;
+}
+
+/**
+ * @brief Ler um arquivo que contem uma matriz
+ *
+ * @return true -> Caso o arquivo foi lido corretamente
+ *         false -> Caso contrario, e a matriz torna uma nula
+ *                  com tamanho 2x2
+ *
+ *  AINDA PRECISA SER FEITO
+ * */
+bool CN::read(string name)
+{
+    std::ifstream arq(name, std::ios::in);
+    
+    if (arq.is_open())
+    {
+
+    }
+
+    else
+        return false;
+    
+    arq.close();
+
+    return true;
 }

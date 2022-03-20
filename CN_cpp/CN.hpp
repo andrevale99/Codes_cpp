@@ -7,9 +7,11 @@
 #include <iomanip>
 #include <ostream>
 #include <tuple>
-#include <cstdint>
+#include <string>
+#include <sstream>
+#include <limits>
 
-using std::uint8_t;
+using std::string;
 
 class CN
 {
@@ -56,17 +58,18 @@ class CN
         CN operator-(const CN &c);
         CN operator*(const CN &c);
 
+        bool save(string name);
+        bool read(string name);
+
+        unsigned i;
+        unsigned j;
+        unsigned k;
+
     private:
         double **mtx;
 
         unsigned row;
         unsigned col;
-        
-        unsigned i;
-        unsigned j;
-        unsigned k;
-
-
 };
 
 #endif
