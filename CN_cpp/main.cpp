@@ -1,3 +1,4 @@
+#include <ios>
 #include <iostream>
 #include <cstdlib>
 #include <iomanip>
@@ -8,19 +9,20 @@ using namespace std;
 
 int main()
 {
+    cout.setf(cout.boolalpha);
+
     cout << "r | c: ";
     unsigned r,c;
     cin >> r >> c;
-    
+
     CN x(r,c);
-
-    cout << x;
-
-    std::tie(r,c) = x.size();
-    cout << r << '\t' << c << "\n\n";
-
-    x.fill(3.1415);
-    cout << x;
+    CN y(r,c);
+    
+    x.fill(2.);
+    y.fill(3.21);
+    
+    cout << "X:\n" << x;
+    cout << "Y:\n" << y;
 
     return 0;
 }
