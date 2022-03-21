@@ -31,6 +31,7 @@ class CN
         return out;
     }
 
+    friend void eye(CN &c);
     friend CN operator*(const double valor, const CN &c);
 
     public:
@@ -45,14 +46,17 @@ class CN
         void eye(unsigned new_row, unsigned new_col);
         void transpose();
 
+        bool set(const unsigned idx_r, const unsigned idx_c, const double valor);
+        bool resize(const unsigned new_row, const unsigned new_col);
+
         std::tuple<unsigned, unsigned> size();
         unsigned size_rows();
         unsigned size_cols();
 
-        bool equal(const CN &c);
-
         void allocate(unsigned new_row, unsigned new_col);
         void deallocate(unsigned row, unsigned col);
+
+        bool equal(const CN &c);
 
         void operator=(const CN &c);
         bool operator==(const CN &c);
@@ -60,6 +64,8 @@ class CN
         CN operator-(const CN &c);
         CN operator*(const CN &c);
         CN operator*(const double valor);
+
+        double operator()(const unsigned idx_r, const unsigned idx_c);
 
         bool save(string name);
         bool read(string name);

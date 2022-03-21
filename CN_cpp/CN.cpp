@@ -1,11 +1,33 @@
 #include "CN.hpp"
-#include <fstream>
-#include <tuple>
-
 
 //===============================================
 //      FRIENDS
 //===============================================
+
+/**
+ *  @brief Transforma a matriz em uma matriz identidade
+ * */
+void eye(CN &c)
+{
+    if (c.row == c.col)
+    {
+        for (unsigned i=0; i<c.row; ++i)
+            for (unsigned j=0; j<c.col; ++j)
+            {
+                if (i == j)
+                    c.mtx[i * c.col + j] = 1;
+                else
+                    c.mtx[i * c.col + j] = 0;
+            }
+    }
+}
+
+/**
+ *  @brief Sobrecarga do operador de multiplicacao (*)
+ *         de uma matriz por uma constante. Esta sobrecarga
+ *         serve para realizar a multiplicacao pela esquerda
+ *         e pela direita ( MTX * valor | valor * MTX )
+ * */
 CN operator*(const double valor, const CN &c)
 {
     CN prov(c.row, c.col);
@@ -70,6 +92,8 @@ CN::CN(const CN &c)
 CN::~CN()
 {
     deallocate(row, col);
+
+    mtx = nullptr;
 }
 
 /**
@@ -138,6 +162,53 @@ void CN::transpose()
 }
 
 /**
+ *  @brief Modifica o valor da posicao escolhida da matriz
+ *
+ *  @return true -> Caso o valor seja modificado (indices certos)
+ *          false -> Caso contrario
+ * */
+bool CN::set(const unsigned idx_r, const unsigned idx_c, const double valor)
+{
+    if (idx_r >= 0 && idx_r < row)
+        if (idx_c >=0 && idx_c < col)
+        {
+            mtx[idx_r * col + idx_c] = valor;
+            return true;
+        }
+
+    return false;
+}
+
+/**
+ *  @brief Define o novo tamanho da matriz
+ *         So ira realocar a posicao da memoria
+ *         se o new_row/new_col eh maior do que 
+ *         o row/col
+ * */
+bool CN::resize(const unsigned new_row, const unsigned new_col)
+{
+    if (new_row > row || new_col > col)
+    {
+        allocate(new_row, new_col);
+        
+        row = new_row;
+        col = new_col;
+
+        return true;
+    }
+    else if (new_row < row || new_col < col)
+    {
+        row = new_row;
+        col = new_col;
+
+        return true;
+    }
+
+
+    return false;
+}
+
+/**
  *  @brief Retorna o tamanho da matriz
  *         Lembrando que para receber o tamanho
  *         deve utilizar "std::tie(var1, var2) = obj.size()"
@@ -162,6 +233,30 @@ unsigned CN::size_rows()
 unsigned CN::size_cols()
 {
     return col;
+}
+
+/**
+ *  @brief Aloca/Realoca a memoria da matriz
+ *         (capacidade de armazenar sem trocar
+ *         o endereco da memoria)
+ *
+ *  @param row -> quantidade de linhas
+ *  @param col -> quantidade de colunas
+ * */
+void CN::allocate(unsigned new_row, unsigned new_col)
+{
+    row = new_row;
+    col = new_col;
+
+    mtx = new double[row * col];
+}
+
+/**
+ *  @brief desaloca a memoria utilizada pela matriz
+ * */
+void CN::deallocate(unsigned row, unsigned col)
+{
+    delete[] mtx;
 }
 
 /**
@@ -192,28 +287,6 @@ bool CN::equal(const CN &c)
         return false;
 
     return true;
-}
-
-/**
- *  @brief Aloca/Realoca o novo tamanho da matriz
- *
- *  @param row -> quantidade de linhas
- *  @param col -> quantidade de colunas
- * */
-void CN::allocate(unsigned new_row, unsigned new_col)
-{
-    row = new_row;
-    col = new_col;
-
-    mtx = new double[row * col];
-}
-
-/**
- *  @brief desaloca a memoria utilizada pela matriz
- * */
-void CN::deallocate(unsigned row, unsigned col)
-{
-    delete[] mtx;
 }
 
 /**
@@ -348,6 +421,23 @@ CN CN::operator*(const double valor)
             prov.mtx[i * col + j] = this->mtx[i * col + j] * valor;    
 
     return prov;
+}
+
+/**
+ *  @brief Sobrecarga do operador de chamada de funcao ("()")
+ *         os indices da linha e coluna seguem o padrao
+ *         dos indices dos arrays em c++ (inicio = 0 e 
+ *         final = TAMNAHO-1)
+ *
+ *  @return O valor da posicao da matriz
+ *          Se o endereco estiver errado
+ *          nao retorna nada
+ * */
+double CN::operator()(const unsigned idx_r, const unsigned idx_c)
+{
+    if (idx_r >= 0 && idx_r < row)
+        if (idx_c >=0 && idx_c < col)
+            return mtx[idx_r * col + idx_c];
 }
 
 /**
