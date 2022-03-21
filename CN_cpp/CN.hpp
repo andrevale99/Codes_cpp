@@ -31,6 +31,8 @@ class CN
         return out;
     }
 
+    friend CN operator*(const double valor, const CN &c);
+
     public:
         CN();
         explicit CN(unsigned row, unsigned col);
@@ -57,6 +59,7 @@ class CN
         CN operator+(const CN &c);
         CN operator-(const CN &c);
         CN operator*(const CN &c);
+        CN operator*(const double valor);
 
         bool save(string name);
         bool read(string name);

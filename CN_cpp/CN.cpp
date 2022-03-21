@@ -2,6 +2,22 @@
 #include <fstream>
 #include <tuple>
 
+
+//===============================================
+//      FRIENDS
+//===============================================
+CN operator*(const double valor, const CN &c)
+{
+    CN prov(c.row, c.col);
+    
+       
+    for (unsigned i=0; i<prov.row; ++i)
+        for (unsigned j=0; j<prov.col; ++j)
+            prov.mtx[i * c.col + j] = c.mtx[i * prov.col + j] * valor;    
+
+    return prov;
+}
+
 //===============================================
 //      CLASS
 //===============================================
@@ -234,6 +250,7 @@ bool CN::operator==(const CN &c)
 
 /**
  *  @brief Sobrecarga do operator de soma (+)
+ *         entre matrizes
  *
  *  @return o resultado
  * */
@@ -260,6 +277,7 @@ CN CN::operator+(const CN &c)
 
 /**
  *  @brief Sobrecarga do operator de soma (-)
+ *         entre matrizes
  *
  *  @return resultado
  * */
@@ -286,6 +304,7 @@ CN CN::operator-(const CN &c)
 
 /**
  *  @brief Sobrecarga do operator de multiplicacao (*)
+ *         entre matrizes
  *
  *  @return resultado
  * */
@@ -311,6 +330,25 @@ CN CN::operator*(const CN &c)
     return prov;
 }
 
+
+/**
+ *  @brief Sobrecarga do operator de multiplicacao (*)
+ *         entre uma matriz e uma constante
+ *
+ *  @return resultado
+ * */
+CN CN::operator*(const double valor)
+{
+    CN prov;
+
+    prov.allocate(row, col);
+    
+    for (i=0; i<row; ++i)
+        for (j=0; j<col; ++j)
+            prov.mtx[i * col + j] = this->mtx[i * col + j] * valor;    
+
+    return prov;
+}
 
 /**
  * @brief Salva a matriz em um arquivo
