@@ -24,6 +24,9 @@ int main()
     cout << y*x;
     cout << y+y;
     cout << y-y;
+    cout << y*4;
+    cout << 4*y;
+
 
     return 0;
 }
