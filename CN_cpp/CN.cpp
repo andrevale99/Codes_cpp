@@ -52,6 +52,9 @@ CN::CN()
     row = 0;
     col = 0;
 
+    row_mem = 0;
+    col_mem = 0;
+
     mtx = nullptr;
 }
 
@@ -67,6 +70,9 @@ CN::CN(unsigned row, unsigned col)
     this->row = row;
     this->col = col;
 
+    row_mem = row;
+    col_mem = col;
+
     allocate(this->row, this->col);
 }
 
@@ -80,6 +86,9 @@ CN::CN(const CN &c)
     this->row = c.row;
     this->col = c.col;
 
+    row_mem = row;
+    col_mem = col;
+
     for (i=0; i<row; ++i)
         for (j=0; j<col; ++j)
             this->mtx[i *col + j] = c.mtx[i * col + j];
@@ -91,7 +100,9 @@ CN::CN(const CN &c)
  * */
 CN::~CN()
 {
-    deallocate(row, col);
+    deallocate();
+
+    row = row_mem = col = col_mem = 0;
 
     mtx = nullptr;
 }
@@ -184,12 +195,21 @@ bool CN::set(const unsigned idx_r, const unsigned idx_c, const double valor)
  *         So ira realocar a posicao da memoria
  *         se o new_row/new_col eh maior do que 
  *         o row/col
+ *
+ *  @return true -> Caso a matriz foi modificada
+ *          false -> cado contrario
  * */
 bool CN::resize(const unsigned new_row, const unsigned new_col)
 {
     if (new_row > row || new_col > col)
     {
-        allocate(new_row, new_col);
+        if (new_row > row_mem || new_col > col_mem)
+        {
+            row_mem = new_row;
+            col_mem = new_col;
+            
+            allocate(new_row, new_col);
+        }
         
         row = new_row;
         col = new_col;
@@ -206,6 +226,27 @@ bool CN::resize(const unsigned new_row, const unsigned new_col)
 
 
     return false;
+}
+
+/**
+ * @brief Realoca a nova quantidade de memoria que a
+ *        matriz pode armazenar sem modificar o endereco da
+ *        memoria
+ * */
+void CN::assign(const unsigned new_row_mem, const unsigned new_col_mem)
+{
+    CN prov(*this);
+
+    row_mem = new_row_mem;
+    col_mem = new_col_mem;
+
+    delete[] mtx;
+
+    mtx = new double[row_mem * col_mem];
+
+    for (i=0; i<prov.row; ++i)
+        for (j=0; j<prov.col; ++j)
+            mtx[i * prov.col + j] = prov.mtx[i * prov.col + j];
 }
 
 /**
@@ -236,6 +277,16 @@ unsigned CN::size_cols()
 }
 
 /**
+ *  @brief Tamanho de bytes que foi alocado para a matriz.
+ *         Lembrando que o tamanho de bytes alocado nao necessariamente
+ *         corresponde ao tamanho da matriz
+ * */
+unsigned int CN::bytes_allocated()
+{
+    return sizeof(double) * row_mem * col_mem;
+}
+
+/**
  *  @brief Aloca/Realoca a memoria da matriz
  *         (capacidade de armazenar sem trocar
  *         o endereco da memoria)
@@ -248,13 +299,16 @@ void CN::allocate(unsigned new_row, unsigned new_col)
     row = new_row;
     col = new_col;
 
+    row_mem = new_row;
+    col_mem = new_col;
+
     mtx = new double[row * col];
 }
 
 /**
  *  @brief desaloca a memoria utilizada pela matriz
  * */
-void CN::deallocate(unsigned row, unsigned col)
+void CN::deallocate()
 {
     delete[] mtx;
 }

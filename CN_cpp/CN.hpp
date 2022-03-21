@@ -48,13 +48,13 @@ class CN
 
         bool set(const unsigned idx_r, const unsigned idx_c, const double valor);
         bool resize(const unsigned new_row, const unsigned new_col);
+        void assign(const unsigned new_row_mem, const unsigned new_col_mem);
 
         std::tuple<unsigned, unsigned> size();
         unsigned size_rows();
         unsigned size_cols();
+        unsigned int bytes_allocated();
 
-        void allocate(unsigned new_row, unsigned new_col);
-        void deallocate(unsigned row, unsigned col);
 
         bool equal(const CN &c);
 
@@ -75,10 +75,16 @@ class CN
         unsigned k;
 
     private:
+        void allocate(unsigned new_row, unsigned new_col);
+        void deallocate();
+
         double *mtx;
 
         unsigned row;
         unsigned col;
+
+        unsigned row_mem;
+        unsigned col_mem;
 };
 
 #endif
