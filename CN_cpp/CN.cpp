@@ -22,6 +22,13 @@ void eye(CN &c)
     }
 }
 
+void transpose(CN &c)
+{
+    for (c.i=0; c.i<c.row; ++c.i)
+        for (c.j=0; c.j<c.col; ++c.j)
+            c.mtx[c.i * c.col + c.j] = c.mtx[c.j * c.col + c.i];
+}
+
 /**
  *  @brief Sobrecarga do operador de multiplicacao (*)
  *         de uma matriz por uma constante. Esta sobrecarga
@@ -197,7 +204,9 @@ bool CN::set(const unsigned idx_r, const unsigned idx_c, const double valor)
  *         o row/col
  *
  *  @return true -> Caso a matriz foi modificada
- *          false -> cado contrario
+ *          false -> caso contrario
+ *
+ *          CORRIGIR
  * */
 bool CN::resize(const unsigned new_row, const unsigned new_col)
 {
@@ -208,7 +217,7 @@ bool CN::resize(const unsigned new_row, const unsigned new_col)
             row_mem = new_row;
             col_mem = new_col;
             
-            allocate(new_row, new_col);
+            allocate(new_row, new_col);   
         }
         
         row = new_row;
@@ -224,14 +233,14 @@ bool CN::resize(const unsigned new_row, const unsigned new_col)
         return true;
     }
 
-
     return false;
 }
 
 /**
  * @brief Realoca a nova quantidade de memoria que a
- *        matriz pode armazenar sem modificar o endereco da
- *        memoria
+ *        matriz pode armazenar
+ *
+ *        ADCIONAR TRATAMENTO
  * */
 void CN::assign(const unsigned new_row_mem, const unsigned new_col_mem)
 {
@@ -302,7 +311,7 @@ void CN::allocate(unsigned new_row, unsigned new_col)
     row_mem = new_row;
     col_mem = new_col;
 
-    mtx = new double[row * col];
+    mtx = new double[row * col];   
 }
 
 /**

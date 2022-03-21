@@ -32,6 +32,7 @@ class CN
     }
 
     friend void eye(CN &c);
+    friend void transpose(CN &C);
     friend CN operator*(const double valor, const CN &c);
 
     public:
