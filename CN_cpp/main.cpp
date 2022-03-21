@@ -14,21 +14,27 @@ int main()
     cout << "r | c: ";
     unsigned r,c;
     cin >> r >> c;
-
-    CN x(r,c);
-    x.fill(3.32);
-
-    x.set(0, 0, 333.);
-    cout << x;
-    cout << x.bytes_allocated() << endl;
+    
+    CN x(r, c);
+    x.fill(122);
+    cout << "\nX1:\n" << x << x.bytes_allocated() << endl;
+    cout << x.size_rows() << '\t' << x.size_cols() << endl << endl;
 
     x.resize(r*2, c*2);
-    cout << x;
-    cout << x.bytes_allocated() << endl;
+    cout << "\nX2:\n" << x << x.bytes_allocated() << endl;
+    cout << x.size_rows() << '\t' << x.size_cols() << endl << endl;
 
-    x.resize(r/2, c/2);
-    cout << x;
-    cout << x.bytes_allocated() << endl;
+    x.resize(r, c);
+    cout << "\nX3:\n" << x << x.bytes_allocated() << endl;
+    cout << x.size_rows() << '\t' << x.size_cols() << endl << endl;
 
+    x.resize(r*2, c*2);
+    cout << "\nX4:\n" << x << x.bytes_allocated() << endl;
+    cout << x.size_rows() << '\t' << x.size_cols() << endl << endl;
+
+    x.assign(100, 100);
+    cout << "\nX2:\n" << x << x.bytes_allocated() << endl;
+    cout << x.size_rows() << '\t' << x.size_cols() << endl << endl;
+    
     return 0;
 }
