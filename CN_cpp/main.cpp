@@ -32,9 +32,11 @@ int main()
     cout << "\nX4:\n" << x << x.bytes_allocated() << endl;
     cout << x.size_rows() << '\t' << x.size_cols() << endl << endl;
 
-    x.assign(100, 100);
-    cout << "\nX2:\n" << x << x.bytes_allocated() << endl;
+    x.resize(r*3, c*3);
+    cout << "\nX5:\n" << x << x.bytes_allocated() << endl;
     cout << x.size_rows() << '\t' << x.size_cols() << endl << endl;
+
+    cout << x(7,7) << endl;
     
     return 0;
 }
