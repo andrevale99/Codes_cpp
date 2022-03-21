@@ -23,7 +23,7 @@ class CN
             out << '(' << std::setw(10);
 
             for(unsigned j=0; j<c.col; ++j)
-                out << c.mtx[i][j] << std::setw(10);
+                out << c.mtx[i * c.col + j] << std::setw(10);
             out << ")\n";
         }
         out << '\n';
@@ -66,7 +66,7 @@ class CN
         unsigned k;
 
     private:
-        double **mtx;
+        double *mtx;
 
         unsigned row;
         unsigned col;

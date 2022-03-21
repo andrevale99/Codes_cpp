@@ -44,7 +44,7 @@ CN::CN(const CN &c)
 
     for (i=0; i<row; ++i)
         for (j=0; j<col; ++j)
-            this->mtx[i][j] = c.mtx[i][j];
+            this->mtx[i *col + j] = c.mtx[i * col + j];
 }
 
 /**
@@ -63,7 +63,7 @@ void CN::fill(double valor)
 {
     for (i=0; i<row; ++i)
         for (j=0; j<col; ++j)
-            mtx[i][j] = valor;
+            mtx[i * col + j] = valor;
 }
 
 /**
@@ -78,9 +78,9 @@ void CN::eye()
             for (j=0; j<col; ++j)
             {
                 if (i == j)
-                    mtx[i][j] = 1;
+                    mtx[i * col + j] = 1;
                 else
-                    mtx[i][j] = 0;
+                    mtx[i * col + j] = 0;
             }
     }
 }
@@ -103,9 +103,9 @@ void CN::eye(unsigned new_row, unsigned new_col)
             for (j=0; j<col; ++j)
             {
                 if (i == j)
-                    mtx[i][j] = 1;
+                    mtx[i * col + j] = 1;
                 else
-                    mtx[i][j] = 0;
+                    mtx[i * col + j] = 0;
             }
     }
 }
@@ -118,7 +118,7 @@ void CN::transpose()
 
     for (i=0; i<row; ++i)
         for (j=0; j<col; ++j)
-            mtx[i][j] = mtx[j][i];
+            mtx[i * col + j] = mtx[j * col + i];
 }
 
 /**
@@ -165,7 +165,7 @@ bool CN::equal(const CN &c)
             for (i=0; i<c.row; ++i)
                 for (j=0; j<c.col; ++j)
                 {
-                    if (mtx[i][j] != c.mtx[i][j])
+                    if (mtx[i * col + j] != c.mtx[i * col + j])
                         return false;
                 }
         }
@@ -189,9 +189,7 @@ void CN::allocate(unsigned new_row, unsigned new_col)
     row = new_row;
     col = new_col;
 
-    mtx = new double*[row];
-    for (i=0; i<row; ++i)
-        mtx[i] = new double[col];
+    mtx = new double[row * col];
 }
 
 /**
@@ -199,9 +197,6 @@ void CN::allocate(unsigned new_row, unsigned new_col)
  * */
 void CN::deallocate(unsigned row, unsigned col)
 {
-    for (i=0; i<row; ++i)
-       delete[] mtx[i];
-
     delete[] mtx;
 }
 
@@ -217,7 +212,7 @@ void CN::operator=(const CN &c)
 
             for(i=0; i<row; ++i)
                 for(j=0; j<col; ++j)
-                    this->mtx[i][j] = c.mtx[i][j];
+                    this->mtx[i * col + j] = c.mtx[i * col + j];
     }
 
 }
@@ -254,7 +249,7 @@ CN CN::operator+(const CN &c)
 
             for (i=0; i<row; ++i)
                 for (j=0; j<col; ++j)
-                    prov.mtx[i][j] = this->mtx[i][j]  + c.mtx[i][j];  
+                    prov.mtx[i * col + j] = this->mtx[i *col + j]  + c.mtx[i * col + j];  
 
         }
     }
@@ -280,7 +275,7 @@ CN CN::operator-(const CN &c)
 
             for (i=0; i<row; ++i)
                 for (j=0; j<col; ++j)
-                    prov.mtx[i][j] = this->mtx[i][j]  - c.mtx[i][j];  
+                    prov.mtx[i * col + j] = this->mtx[i * col + j]  - c.mtx[i * col + j];  
 
         }
     }
@@ -307,7 +302,7 @@ CN CN::operator*(const CN &c)
             {
                 for (k=0; k<col; ++k)
                 {
-                    prov.mtx[i][j] = this->mtx[i][k] * c.mtx[k][j];    
+                    prov.mtx[i * col + j] = this->mtx[i * col + k] * c.mtx[k * col + j];    
                 }
             }
         }
@@ -341,7 +336,7 @@ bool CN::save(string name)
         {
             for (j=0; j<col; ++j)
             {
-                arq << mtx[i][j] << ' ';
+                arq << mtx[i * col + j] << ' ';
                 
                 if (arq.fail())
                 {
