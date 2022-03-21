@@ -18,15 +18,18 @@ int main()
     CN x(r,c);
     x.fill(3.32);
 
-    CN y(x);
-    cout << y;
+    x.set(0, 0, 333.);
+    cout << x;
 
-    cout << y*x;
-    cout << y+y;
-    cout << y-y;
-    cout << y*4;
-    cout << 4*y;
+    x.allocate(4,4);
+    cout << x;
+    x.set(3,3, 55);
+    cout << "r1 c1: " << x.size_rows() << ' ' << x.size_cols() << endl;
 
+
+    x.resize(3,3);
+    cout << x;
+    cout << "r2 c2: " << x.size_rows() << ' ' << x.size_cols() << endl;
 
     return 0;
 }
