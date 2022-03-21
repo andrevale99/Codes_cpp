@@ -1,4 +1,5 @@
 #include "CN.hpp"
+#include <ostream>
 
 //===============================================
 //      FRIENDS
@@ -193,7 +194,8 @@ bool CN::set(const unsigned idx_r, const unsigned idx_c, const double valor)
             mtx[idx_r * col + idx_c] = valor;
             return true;
         }
-
+    
+    std::cerr << out_of_range;
     return false;
 }
 
@@ -210,29 +212,31 @@ bool CN::set(const unsigned idx_r, const unsigned idx_c, const double valor)
  * */
 bool CN::resize(const unsigned new_row, const unsigned new_col)
 {
-    if (new_row > row || new_col > col)
+    if (new_row > row_mem || new_col > col_mem)
     {
-        if (new_row > row_mem || new_col > col_mem)
-        {
-            row_mem = new_row;
-            col_mem = new_col;
-            
-            allocate(new_row, new_col);   
-        }
-        
+        assign(new_row, new_col);
+
         row = new_row;
         col = new_col;
 
         return true;
     }
-    else if (new_row < row || new_col < col)
+    
+    else if ((new_row <= row_mem || new_row > row) || (new_col <= col_mem || new_col > col))
     {
         row = new_row;
         col = new_col;
-
+        return true;
+    }
+    else if (new_row > row || new_col > col)
+    {
+        row = new_row;
+        col = new_col;
+    
         return true;
     }
 
+    std::cerr << erro_desconhecido;
     return false;
 }
 
@@ -240,7 +244,6 @@ bool CN::resize(const unsigned new_row, const unsigned new_col)
  * @brief Realoca a nova quantidade de memoria que a
  *        matriz pode armazenar
  *
- *        ADCIONAR TRATAMENTO
  * */
 void CN::assign(const unsigned new_row_mem, const unsigned new_col_mem)
 {
@@ -501,6 +504,9 @@ double CN::operator()(const unsigned idx_r, const unsigned idx_c)
     if (idx_r >= 0 && idx_r < row)
         if (idx_c >=0 && idx_c < col)
             return mtx[idx_r * col + idx_c];
+
+    std::cerr << out_of_range;
+    return std::numeric_limits<double>::max();
 }
 
 /**
@@ -520,6 +526,7 @@ bool CN::save(string name)
         if (arq.fail())
         {
             arq.close();
+            std::cerr << erro_de_gravacao_RowCol;
             return false;
         }
 
@@ -532,6 +539,7 @@ bool CN::save(string name)
                 if (arq.fail())
                 {
                     arq.close();
+                    std::cerr << erro_de_gravacao_data;
                     return false;
                 }
             }//FIM do col for
@@ -542,7 +550,10 @@ bool CN::save(string name)
     }//FIM arq.good()
 
     else
+    {
+        std::cerr << erro_gravacao_arq;
         return false;
+    }
 
     arq.close();
 

@@ -84,8 +84,14 @@ class CN
         unsigned row;
         unsigned col;
 
-        unsigned row_mem;
-        unsigned col_mem;
+        unsigned row_mem; //Tamanho da memoria
+        unsigned col_mem; //Tamanho da memoria
+
+        string out_of_range = "[CN] Fora do tamanho da matriz\n";
+        string erro_desconhecido = "[CN] Algum erro nao identificado\n";
+        string erro_gravacao_arq = "[CN] Erro ao criar o arquivo\n";
+        string erro_de_gravacao_RowCol = "[CN] Erro ao gravar a qtd de linas e colunas\n";
+        string erro_de_gravacao_data = "[CN] Erro ao gravar os dados\n";
 };
 
 #endif
