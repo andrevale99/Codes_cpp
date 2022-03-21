@@ -20,16 +20,15 @@ int main()
 
     x.set(0, 0, 333.);
     cout << x;
+    cout << x.bytes_allocated() << endl;
 
-    x.allocate(4,4);
+    x.resize(r*2, c*2);
     cout << x;
-    x.set(3,3, 55);
-    cout << "r1 c1: " << x.size_rows() << ' ' << x.size_cols() << endl;
+    cout << x.bytes_allocated() << endl;
 
-
-    x.resize(3,3);
+    x.resize(r/2, c/2);
     cout << x;
-    cout << "r2 c2: " << x.size_rows() << ' ' << x.size_cols() << endl;
+    cout << x.bytes_allocated() << endl;
 
     return 0;
 }
