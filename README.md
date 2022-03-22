@@ -1,9 +1,8 @@
 # Codigos_Cpp
----
+
 Alguns códigos pessoais em C++ para estudo ou para passar o tempo.
 
 ## Pastas
----
 
 ### **line_drawning**
 Contém um código para a escrita de linhas em um terminal, baseado nas equações de *Principles of Interactive Computer Graphics*.
